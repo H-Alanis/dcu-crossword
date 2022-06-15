@@ -31,6 +31,7 @@ public class GMScript : MonoBehaviour
 				// Word matched a desired word.
 				foreach (var (letter, target) in match.Zip(TargetLetters, (letter, target) => (letter.ToString(), target)))
 				{
+					// Render the word in the target possion
 					target.GetComponent<TextMesh>().text = letter;
 				}
 			}
@@ -38,6 +39,19 @@ public class GMScript : MonoBehaviour
 			// If it doesn't match a word, reset
 			// If word matched, also reset
 			currentWord = string.Empty;
+		}
+		else if (Input.anyKeyDown)
+		{
+			foreach (var pressed in Input.inputString)
+			{
+				currentWord = pressed switch
+				{
+					'\b' when (currentWord.Length > 0) => currentWord.Remove(currentWord.Length -1),
+					'\n' => currentWord,
+					'\r' => currentWord,
+					_ => currentWord += pressed
+				};
+			}
 		}
 
 		// Show the current spelled word
